@@ -73,25 +73,19 @@ function CreateProfile({
         description: JSON.stringify(obj),
         image: new File([image], 'imageName', { type: 'image/*' }),
       })
-      console.log('metadata', metadata)
 
       if (metadata) {
         console.log('metadata URL', metadata?.url)
         const url = metadata?.url.substring(7) //  bafyreifeiksc7pfbdex5fhes2inqdail7cvf3jfphugtpyzw4rpzte3rca/metadata.json
         const fullUrl = `https://cloudflare-ipfs.com/ipfs/${url}`
-        console.log('fullUrl', fullUrl)
 
-        //  I CAN TRY WITH THIS https://cloudflare-ipfs.com/ipfs/bafyreihyg4o5quqwbflwcp2r3k5rqhb46ezxtodfj6v6xt7bu7x6to3n2q/metadata.json
-
-        // https://cloudflare-ipfs.com/ipfs/bafyreibkpvin2udgwqhl2pvctfjtq4h66ebon5higevywvdkj3uupsukei/metadata.json
-
-        // const saveToContract = await contract.createGroup(
-        //   fullUrl,
-        //   targetAmmount,
-        // )
-        // const tx = await saveToContract.wait()
-        // console.log('tx', tx)
-        // history.push('/classes')
+        const saveToContract = await contract.createGroup(
+          fullUrl,
+          targetAmmount,
+        )
+        const tx = await saveToContract.wait()
+        console.log('tx', tx)
+        history.push('/classes')
       }
     } catch (error) {
       console.log(error)
