@@ -81,6 +81,25 @@ contract RatemyClassWorldCoin is ERC721URIStorage {
       }
       return groupsArray;
   }
+      function createFlow(address receiver, int96 flowRate, uint256 toWrap) external {
+        _transfer(msg.sender, address(this), toWrap);
+        _approve(address(this), superToken, toWrap);
+        IAlluoSuperToken(superToken).upgradeTo(msg.sender, toWrap, "");
+        cfaV1Lib.createFlowByOperator( msg.sender, receiver, ISuperfluidToken(superToken), flowRate);
+        ISuperfluidResolver(superfluidResolver).addToChecker(msg.sender, receiver);
+        emit CreateFlow(msg.sender, receiver, flowRate);
+    }
+    function stopFlowWhenCritical(address sender, address receiver) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        cfaV1Lib.deleteFlowByOperator(sender, receiver, ISuperfluidToken(superToken));
+        emit DeletedFlow(sender, receiver);
+    }
+
+     function forceWrap(address sender) external onlyRole(DEFAULT_ADMIN_ROLE) {
+          uint256 balance = balanceOf(address(sender));
+          _transfer(sender, address(this), balance);
+          _approve(address(this), superToken, balance);
+          IAlluoSuperToken(superToken).upgradeTo(sender, balance, "");
+      }
 
 }
 
