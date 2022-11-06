@@ -46,7 +46,8 @@ function CreateProfile({
   }
 
   const save = async () => {
-    console.log('saveToNFT')
+
+    
     try {
       const creationDate = await getDay()
       const obj = {
